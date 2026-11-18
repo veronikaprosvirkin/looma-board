@@ -1,0 +1,127 @@
+[
+  {
+    "id": "post-01",
+    "title": "Осінній вікенд у Карпатах",
+    "description": "Підйом на світанку, туман між смереками та гарячий карпатський чай.",
+    "date": "2026-10-14",
+    "status": "memory",
+    "categoryPath": ["travel", "2026", "mountains"],
+    "tags": ["гори", "осінь", "подорож"],
+    "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800"
+  },
+  {
+    "id": "post-02",
+    "title": "Захист фінального вебпроєкту",
+    "description": "Презентувати LoomaBoard: інтерактивний календар, сезонні теми та стрічку спогадів.",
+    "date": "2026-12-18",
+    "status": "plan",
+    "reminderTime": "24h",
+    "categoryPath": ["study", "web-dev"],
+    "tags": ["навчання", "react", "дедлайн"],
+    "imageUrl": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800"
+  },
+  {
+    "id": "post-03",
+    "title": "Ранкова кава на Подолі",
+    "description": "Тепла субота, улюблена книжка та круасан біля вікна.",
+    "date": "2026-09-21",
+    "status": "memory",
+    "categoryPath": ["personal", "city"],
+    "tags": ["київ", "кава", "настрій"],
+    "imageUrl": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800"
+  },
+  {
+    "id": "post-04",
+    "title": "Поїздка до зимового Львова",
+    "description": "Різдвяний ярмарок, глінтвейн та вечірня прогулянка старим містом.",
+    "date": "2026-12-27",
+    "status": "plan",
+    "reminderTime": "48h",
+    "categoryPath": ["travel", "2026", "cities"],
+    "tags": ["львів", "зима", "вихідні"],
+    "imageUrl": "https://images.unsplash.com/photo-1565008576549-57569a49371d?w=800"
+  },
+  {
+    "id": "post-05",
+    "title": "Концерт симфонічного оркестру",
+    "description": "Неймовірна атмосфера при свічках у філармонії.",
+    "date": "2026-11-02",
+    "status": "memory",
+    "categoryPath": ["personal", "events"],
+    "tags": ["музика", "вечір", "натхнення"],
+    "imageUrl": "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800"
+  },
+  {
+    "id": "post-06",
+    "title": "Курс з UI/UX дизайну",
+    "description": "Завершити фінальний кейс для портфоліо та оформити його на Behance.",
+    "date": "2027-01-15",
+    "status": "plan",
+    "reminderTime": "24h",
+    "categoryPath": ["study", "design"],
+    "tags": ["дизайн", "портфоліо"],
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800"
+  },
+  {
+    "id": "post-07",
+    "title": "Літній захід сонця біля моря",
+    "description": "Шум хвиль і відчуття повної свободи після сесії.",
+    "date": "2026-07-19",
+    "status": "memory",
+    "categoryPath": ["travel", "2026", "sea"],
+    "tags": ["літо", "море", "відпочинок"],
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800"
+  },
+  {
+    "id": "post-08",
+    "title": "Весняний пікнік у ботанічному саду",
+    "description": "Цвітіння магнолій та бузку — найкращий день весни.",
+    "date": "2026-05-10",
+    "status": "memory",
+    "categoryPath": ["personal", "city"],
+    "tags": ["весна", "квіти", "природа"],
+    "imageUrl": "https://images.unsplash.com/photo-1522383225653-ed111181a951?w=800"
+  },
+  {
+    "id": "post-09",
+    "title": "Плани на весняний марафон 10 км",
+    "description": "Почати регулярні пробіжки тричі на тиждень з лютого.",
+    "date": "2027-04-12",
+    "status": "plan",
+    "reminderTime": "72h",
+    "categoryPath": ["personal", "sport"],
+    "tags": ["спорт", "біг", "цілі"],
+    "imageUrl": "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800"
+  },
+  {
+    "id": "post-10",
+    "title": "Майстер-клас із кераміки",
+    "description": "Зліпила власну чашку для ранкової матчі.",
+    "date": "2026-08-30",
+    "status": "memory",
+    "categoryPath": ["personal", "hobby"],
+    "tags": ["творчість", "кераміка"],
+    "imageUrl": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800"
+  },
+  {
+    "id": "post-11",
+    "title": "Вікенд у будиночку в лісі",
+    "description": "Цифровий детокс, камін і настільні ігри з друзями.",
+    "date": "2027-02-06",
+    "status": "plan",
+    "reminderTime": "24h",
+    "categoryPath": ["travel", "2027"],
+    "tags": ["відпочинок", "друзі", "зима"],
+    "imageUrl": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800"
+  },
+  {
+    "id": "post-12",
+    "title": "Перший сніг у Києві",
+    "description": "Вечірні вогні міста під тихим снігопадом.",
+    "date": "2026-11-16",
+    "status": "memory",
+    "categoryPath": ["personal", "city"],
+    "tags": ["зима", "сніг", "київ"],
+    "imageUrl": "https://images.unsplash.com/photo-1483664852095-d6cc6870702d?w=800"
+  }
+]
