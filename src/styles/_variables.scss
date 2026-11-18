@@ -1,0 +1,52 @@
+$header-height: 64px;
+$sidebar-width: 260px;
+$indent-step: 16px; 
+
+// Осінь (за замовчуванням)
+:root,
+[data-season="autumn"] {
+  --bg-page: #faf9f6;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f3efe8;
+  --border-color: #e6dfd5;
+  --text-primary: #1f2421;
+  --text-secondary: #68645e;
+  --accent-memory: #d97757; 
+  --accent-plan: #2e7d6b;
+}
+
+// Зима
+[data-season="winter"] {
+  --bg-page: #f4f7fa;
+  --bg-surface: #ffffff;
+  --bg-subtle: #e9eff5;
+  --border-color: #d6e0ea;
+  --text-primary: #18222f;
+  --text-secondary: #5c6b7d;
+  --accent-memory: #3b6e8c; // Крижаний синій
+  --accent-plan: #5c8a72;   // Хвойний
+}
+
+// Весна
+[data-season="spring"] {
+  --bg-page: #f6faf7;
+  --bg-surface: #ffffff;
+  --bg-subtle: #ebf3ed;
+  --border-color: #d8e6dc;
+  --text-primary: #1b2620;
+  --text-secondary: #5a6e62;
+  --accent-memory: #d46a84; // Квітуча сакура
+  --accent-plan: #3e8e6e;   // Молода зелень
+}
+
+// Літо
+[data-season="summer"] {
+  --bg-page: #fcf9f2;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f5efe0;
+  --border-color: #e8dec8;
+  --text-primary: #24211a;
+  --text-secondary: #6e6759;
+  --accent-memory: #d9822b; // Сонячний бурштин
+  --accent-plan: #1e847f;   // Морська бірюза
+}
