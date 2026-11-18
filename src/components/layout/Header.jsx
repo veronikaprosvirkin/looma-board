@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { useSeasonTheme } from '../../hooks/useSeasonTheme';
 import initialPosts from '../../data/mockPosts.json';
@@ -7,54 +7,30 @@ import './Header.scss';
 export default function Header() {
   const { theme, setTheme } = useSeasonTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [slideIndex, setSlideIndex] = useState(0);
 
-  const slides = initialPosts.filter((post) => post.status === 'memory').slice(0, 4);
-
-  useEffect(() => {
-    if (slides.length <= 1) return;
-    const timer = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % slides.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [slides.length]);
-
-  const currentSlide = slides[slideIndex];
-
-  const handlePrevSlide = () => {
-    setSlideIndex((prev) => (prev - 1 + slides.length) % slides.length);
-  };
-
-  const handleNextSlide = () => {
-    setSlideIndex((prev) => (prev + 1) % slides.length);
-  };
+  const memoryPhotos = initialPosts.filter((post) => post.imageUrl);
+  const marqueeItems = [...memoryPhotos, ...memoryPhotos];
 
   return (
     <header className="header">
-      {currentSlide && (
-        <div className="header__slider">
-          <img
-            src={currentSlide.imageUrl}
-            alt={currentSlide.title}
-            className="header__slider-img"
-          />
-          <div className="header__slider-info">
-            <span className="header__slider-badge">Спогад дня • {currentSlide.date}</span>
-            <p className="header__slider-title">{currentSlide.title}</p>
-          </div>
-          <div className="header__slider-controls">
-            <button type="button" onClick={handlePrevSlide} aria-label="Попередній слайд">
-              ‹
-            </button>
-            <button type="button" onClick={handleNextSlide} aria-label="Наступний слайд">
-              ›
-            </button>
-          </div>
+      <div className="header__marquee">
+        <span className="header__marquee-badge">FEATURED MEMORIES</span>
+        <div className="header__marquee-track">
+          {marqueeItems.map((post, idx) => (
+            <div className="header__marquee-card" key={`${post.id}-${idx}`}>
+              <img src={post.imageUrl} alt={post.title} />
+              <div className="header__marquee-caption">
+                <span>{post.date}</span>
+                <strong>{post.title}</strong>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
 
       <div className="header__bar">
         <Link className="header__logo" to="/">
+          <span className="header__logo-dot" />
           LoomaBoard
         </Link>
 
@@ -107,10 +83,10 @@ export default function Header() {
             aria-label="Оберіть пору року"
           >
             <option value="auto">Авто-сезон</option>
-            <option value="autumn">Осінь</option>
-            <option value="winter">Зима</option>
-            <option value="spring">Весна</option>
-            <option value="summer">Літо</option>
+            <option value="autumn">🍂 Осінь</option>
+            <option value="winter">❄️ Зима</option>
+            <option value="spring">🌸 Весна</option>
+            <option value="summer">☀️ Літо</option>
           </select>
 
           <NavLink className="header__auth-btn" to="/auth">
