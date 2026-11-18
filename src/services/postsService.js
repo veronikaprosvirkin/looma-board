@@ -34,6 +34,28 @@ function insertSubcategory(nodes, parentId, newNode) {
   });
 }
 
+  function updateCategoryLabel(nodes, targetId, newLabel) {
+    return nodes.map((node) => {
+      if (node.id === targetId) {
+        return { ...node, label: newLabel.trim() };
+      }
+      if (node.children?.length) {
+        return {
+          ...node,
+          children: updateCategoryLabel(node.children, targetId, newLabel),
+        };
+      }
+      return node;
+    });
+  };
+
+  function removeCategory(nodes, targetId) {
+    nodes = nodes.filter((node) => node.id !== targetId);
+    return nodes.map((node) => {
+      return {...node, children: node.children ? removeCategory(node.children, targetId) : []}; 
+    });
+  };
+
 export const postsService = {
   async getAllPosts() {
     try {
@@ -88,4 +110,26 @@ export const postsService = {
       throw new Error('Не вдалося створити папку.', { cause: error });
     }
   },
+
+  async renameCategory(id, newLabel) {
+    try {
+      const categories = await this.getCategories();
+      const updated = updateCategoryLabel(categories, id, newLabel);
+      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(updated));
+      return updated;
+    } catch (error) {
+      throw new Error('Не вдалося перейменувати папку.', { cause: error });
+    }
+  },
+
+  async deleteCategory(id) {
+    try {
+      const categories = await this.getCategories();
+      const updated = removeCategory(categories, id);
+      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(updated));
+      return updated;
+    } catch (error) {
+      throw new Error('Не вдалося видалити папку.', { cause: error });
+    }
+  }
 };
