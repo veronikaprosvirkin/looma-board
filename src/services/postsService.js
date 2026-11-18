@@ -13,7 +13,7 @@ export const postsService = {
       return initialPosts;
     } catch (error) {
       console.error('Помилка завантаження постів:', error);
-      throw new Error('Не вдалося завантажити дані дошки.');
+      throw new Error('Не вдалося завантажити дані дошки.', {cause: error});
     }
   },
 
@@ -29,7 +29,7 @@ export const postsService = {
       return postWithId;
     } catch (error) {
       console.error('Помилка створення поста:', error);
-      throw new Error('Не вдалося зберегти запис.');
+      throw new Error('Не вдалося зберегти запис.', {cause: error});
     }
   },
 
@@ -43,7 +43,7 @@ export const postsService = {
       return updated;
     } catch (error) {
       console.error('Помилка оновлення статусу:', error);
-      throw new Error('Не вдалося оновити статус події.');
+      throw new Error('Не вдалося оновити статус події.', {cause: error});
     }
   },
 };
