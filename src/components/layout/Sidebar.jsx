@@ -1,12 +1,22 @@
 import { useState, useEffect } from 'react';
 import { postsService } from '../../services/postsService';
+import Modal from '../ui/Modal';
 import './Sidebar.scss';
 
-function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSubcategory, onRenameCategory, onDeleteCategory }) {
+function CategoryNode({
+  node,
+  level,
+  selectedCategory,
+  onSelectCategory,
+  onAddSubcategory,
+  onOpenRename,
+  onOpenDelete,
+}) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isActionOpen, setIsActionOpen] = useState(false);
+
   const hasChildren = Boolean(node.children && node.children.length > 0);
   const isActive = selectedCategory === node.id;
-  const [isActionOpen, setIsActionOpen] = useState(false);
 
   const handleSelect = () => {
     onSelectCategory(node.id);
@@ -19,21 +29,19 @@ function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSu
     e.stopPropagation();
     onAddSubcategory(node.id, node.label);
     setIsExpanded(true);
+    setIsActionOpen(false);
   };
 
-  const handleRename = (e) => {
+  const handleRenameClick = (e) => {
     e.stopPropagation();
-    const newLabel = prompt('Введіть нову назву папки:', node.label);
-    if (newLabel !== null) {
-      onRenameCategory(node.id, newLabel);
-    }
+    onOpenRename(node.id, node.label);
+    setIsActionOpen(false);
   };
 
-  const handleDelete = (e) => {
+  const handleDeleteClick = (e) => {
     e.stopPropagation();
-    if (window.confirm('Ви впевнені, що хочете видалити цю папку?')) {
-      onDeleteCategory(node.id);
-    }
+    onOpenDelete(node.id, node.label);
+    setIsActionOpen(false);
   };
 
   return (
@@ -69,32 +77,13 @@ function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSu
 
           {isActionOpen && (
             <div className="sidebar__dropdown">
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleCreateChild(e);
-                  setIsActionOpen(false);
-                }}
-              >
+              <button type="button" onClick={handleCreateChild}>
                 + Підпапка
               </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  handleRename(e);
-                  setIsActionOpen(false);
-                }}
-              >
+              <button type="button" onClick={handleRenameClick}>
                 Перейменувати
               </button>
-              <button
-                type="button"
-                className="is-danger"
-                onClick={(e) => {
-                  handleDelete(e);
-                  setIsActionOpen(false);
-                }}
-              >
+              <button type="button" className="is-danger" onClick={handleDeleteClick}>
                 Видалити
               </button>
             </div>
@@ -112,8 +101,8 @@ function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSu
               selectedCategory={selectedCategory}
               onSelectCategory={onSelectCategory}
               onAddSubcategory={onAddSubcategory}
-              onRenameCategory={onRenameCategory}
-              onDeleteCategory={onDeleteCategory}
+              onOpenRename={onOpenRename}
+              onOpenDelete={onOpenDelete}
             />
           ))}
         </ul>
@@ -127,18 +116,34 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
   const [posts, setPosts] = useState([]);
   const [creatingFor, setCreatingFor] = useState(null);
   const [newFolderName, setNewFolderName] = useState('');
+  const [modalData, setModalData] = useState(null);
+  const [renameValue, setRenameValue] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     async function loadData() {
-      const [loadedCategories, loadedPosts] = await Promise.all([
-        postsService.getCategories(),
-        postsService.getAllPosts(),
-      ]);
-      setCategories(loadedCategories);
-      setPosts(loadedPosts);
+      try {
+        const [loadedCategories, loadedPosts] = await Promise.all([
+          postsService.getCategories(),
+          postsService.getAllPosts(),
+        ]);
+        setCategories(loadedCategories);
+        setPosts(loadedPosts);
+      } catch (err) {
+        setErrorMessage(err.message || 'Помилка завантаження даних');
+      }
     }
     loadData();
   }, []);
+
+  const openDeleteModal = (id, label) => {
+    setModalData({ type: 'delete', id, label });
+  };
+
+  const openRenameModal = (id, label) => {
+    setRenameValue(label);
+    setModalData({ type: 'rename', id, label });
+  };
 
   const handleOpenCreate = (parentId = null, parentLabel = 'Кореневий розділ') => {
     setCreatingFor({ parentId, parentLabel });
@@ -148,24 +153,40 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     if (!newFolderName.trim()) return;
-    const updated = await postsService.addCategory(newFolderName, creatingFor.parentId);
-    setCategories(updated);
-    setCreatingFor(null);
-    setNewFolderName('');
+    try {
+      const updated = await postsService.addCategory(newFolderName, creatingFor.parentId);
+      setCategories(updated);
+      setCreatingFor(null);
+      setNewFolderName('');
+    } catch (err) {
+      setErrorMessage(err.message);
+    }
   };
 
-  const handleRenameCategory = async (id, newLabel) => {
-    const updated = await postsService.renameCategory(id, newLabel);
-    setCategories(updated);
-  }
-
-  const handleDeleteCategory = async (id) => {
-    const updated = await postsService.deleteCategory(id);
-    setCategories(updated);
-    if (selectedCategory === id) {
-      onSelectCategory('all');
+  const handleRenameSubmit = async () => {
+    if (!renameValue.trim() || !modalData) return;
+    try {
+      const updated = await postsService.renameCategory(modalData.id, renameValue);
+      setCategories(updated);
+      setModalData(null);
+    } catch (err) {
+      setErrorMessage(err.message);
     }
-  }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!modalData) return;
+    try {
+      const updated = await postsService.deleteCategory(modalData.id);
+      setCategories(updated);
+      if (selectedCategory === modalData.id) {
+        onSelectCategory('all');
+      }
+      setModalData(null);
+    } catch (err) {
+      setErrorMessage(err.message);
+    }
+  };
 
   const memoriesCount = posts.filter((p) => p.status === 'memory').length;
   const plansCount = posts.filter((p) => p.status === 'plan').length;
@@ -184,6 +205,16 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
             + Папка
           </button>
         </div>
+
+        {/* Кастомний банер помилки */}
+        {errorMessage && (
+          <div className="sidebar__error-banner">
+            <span>{errorMessage}</span>
+            <button type="button" onClick={() => setErrorMessage('')}>
+              ✕
+            </button>
+          </div>
+        )}
 
         {creatingFor && (
           <form className="sidebar__create-form" onSubmit={handleCreateSubmit}>
@@ -230,8 +261,8 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
               selectedCategory={selectedCategory}
               onSelectCategory={onSelectCategory}
               onAddSubcategory={handleOpenCreate}
-              onRenameCategory={handleRenameCategory}
-              onDeleteCategory={handleDeleteCategory}
+              onOpenRename={openRenameModal}
+              onOpenDelete={openDeleteModal}
             />
           ))}
         </ul>
@@ -252,6 +283,62 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
           <strong>{plansCount}</strong>
         </div>
       </div>
+
+      <Modal
+        isOpen={Boolean(modalData)}
+        title={modalData?.type === 'delete' ? 'Видалити папку?' : 'Перейменувати папку'}
+        onClose={() => setModalData(null)}
+      >
+        {modalData?.type === 'delete' && (
+          <>
+            <p>
+              Ви впевнені, що хочете видалити папку <strong>«{modalData.label}»</strong> та всі
+              вкладені в неї підпапки?
+            </p>
+            <div className="modal-card__actions">
+              <button type="button" onClick={() => setModalData(null)}>
+                Скасувати
+              </button>
+              <button type="button" className="is-danger" onClick={handleDeleteConfirm}>
+                Так, видалити
+              </button>
+            </div>
+          </>
+        )}
+
+        {modalData?.type === 'rename' && (
+          <>
+            <p>Нова назва для «{modalData.label}»:</p>
+            <input
+              type="text"
+              value={renameValue}
+              onChange={(e) => setRenameValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && renameValue.trim()) {
+                  handleRenameSubmit();
+                }
+              }}
+              autoFocus
+            />
+            {!renameValue.trim() && (
+              <p className="modal-card__error">Назва не може бути порожньою.</p>
+            )}
+            <div className="modal-card__actions">
+              <button type="button" onClick={() => setModalData(null)}>
+                Скасувати
+              </button>
+              <button
+                type="button"
+                className="is-primary"
+                disabled={!renameValue.trim()}
+                onClick={handleRenameSubmit}
+              >
+                Зберегти
+              </button>
+            </div>
+          </>
+        )}
+      </Modal>
     </aside>
   );
 }

@@ -273,4 +273,25 @@
       background-color: var(--accent-plan);
     }
   }
+
+  &__error-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: rgba(242, 139, 130, 0.14);
+    border: 1px solid rgba(242, 139, 130, 0.4);
+    color: #f28b82;
+    font-size: 12px;
+
+    button {
+      background: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+  }
 }
