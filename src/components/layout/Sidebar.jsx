@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { postsService } from '../../services/postsService';
+import {categoriesService} from '../../services/categoriesService';
 import Modal from '../ui/Modal';
 import './Sidebar.scss';
 
@@ -124,7 +125,7 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
     async function loadData() {
       try {
         const [loadedCategories, loadedPosts] = await Promise.all([
-          postsService.getCategories(),
+          categoriesService.getCategories(),
           postsService.getAllPosts(),
         ]);
         setCategories(loadedCategories);
@@ -154,7 +155,7 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
     e.preventDefault();
     if (!newFolderName.trim()) return;
     try {
-      const updated = await postsService.addCategory(newFolderName, creatingFor.parentId);
+      const updated = await categoriesService.addCategory(newFolderName, creatingFor.parentId);
       setCategories(updated);
       setCreatingFor(null);
       setNewFolderName('');
@@ -166,7 +167,7 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
   const handleRenameSubmit = async () => {
     if (!renameValue.trim() || !modalData) return;
     try {
-      const updated = await postsService.renameCategory(modalData.id, renameValue);
+      const updated = await categoriesService.renameCategory(modalData.id, renameValue);
       setCategories(updated);
       setModalData(null);
     } catch (err) {
@@ -177,7 +178,7 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
   const handleDeleteConfirm = async () => {
     if (!modalData) return;
     try {
-      const updated = await postsService.deleteCategory(modalData.id);
+      const updated = await categoriesService.deleteCategory(modalData.id);
       setCategories(updated);
       if (selectedCategory === modalData.id) {
         onSelectCategory('all');
