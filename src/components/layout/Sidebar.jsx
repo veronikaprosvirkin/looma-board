@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { postsService } from '../../services/postsService';
 import './Sidebar.scss';
 
-function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSubcategory }) {
+function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSubcategory, onRenameCategory, onDeleteCategory }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const hasChildren = Boolean(node.children && node.children.length > 0);
   const isActive = selectedCategory === node.id;
+  const [isActionOpen, setIsActionOpen] = useState(false);
 
   const handleSelect = () => {
     onSelectCategory(node.id);
@@ -20,12 +21,28 @@ function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSu
     setIsExpanded(true);
   };
 
+  const handleRename = (e) => {
+    e.stopPropagation();
+    const newLabel = prompt('Введіть нову назву папки:', node.label);
+    if (newLabel !== null) {
+      onRenameCategory(node.id, newLabel);
+    }
+  };
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (window.confirm('Ви впевнені, що хочете видалити цю папку?')) {
+      onDeleteCategory(node.id);
+    }
+  };
+
   return (
     <li className="sidebar__node">
       <div
         className={`sidebar__item ${isActive ? 'is-active' : ''}`}
         style={{ '--level': level }}
         onClick={handleSelect}
+        onMouseLeave={() => setIsActionOpen(false)}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && handleSelect()}
@@ -37,14 +54,52 @@ function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSu
           <span className="sidebar__label">{node.label}</span>
         </span>
 
-        <button
-          type="button"
-          className="sidebar__add-sub-btn"
-          title={`Додати підпапку в «${node.label}»`}
-          onClick={handleCreateChild}
-        >
-          +
-        </button>
+        <div className="sidebar__actions">
+          <button
+            type="button"
+            className="sidebar__dots-btn"
+            title="Дії з папкою"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsActionOpen((prev) => !prev);
+            }}
+          >
+            ⋯
+          </button>
+
+          {isActionOpen && (
+            <div className="sidebar__dropdown">
+              <button
+                type="button"
+                onClick={(e) => {
+                  handleCreateChild(e);
+                  setIsActionOpen(false);
+                }}
+              >
+                + Підпапка
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  handleRename(e);
+                  setIsActionOpen(false);
+                }}
+              >
+                Перейменувати
+              </button>
+              <button
+                type="button"
+                className="is-danger"
+                onClick={(e) => {
+                  handleDelete(e);
+                  setIsActionOpen(false);
+                }}
+              >
+                Видалити
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {hasChildren && isExpanded && (
@@ -57,6 +112,8 @@ function CategoryNode({ node, level, selectedCategory, onSelectCategory, onAddSu
               selectedCategory={selectedCategory}
               onSelectCategory={onSelectCategory}
               onAddSubcategory={onAddSubcategory}
+              onRenameCategory={onRenameCategory}
+              onDeleteCategory={onDeleteCategory}
             />
           ))}
         </ul>
@@ -96,6 +153,19 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
     setCreatingFor(null);
     setNewFolderName('');
   };
+
+  const handleRenameCategory = async (id, newLabel) => {
+    const updated = await postsService.renameCategory(id, newLabel);
+    setCategories(updated);
+  }
+
+  const handleDeleteCategory = async (id) => {
+    const updated = await postsService.deleteCategory(id);
+    setCategories(updated);
+    if (selectedCategory === id) {
+      onSelectCategory('all');
+    }
+  }
 
   const memoriesCount = posts.filter((p) => p.status === 'memory').length;
   const plansCount = posts.filter((p) => p.status === 'plan').length;
@@ -160,6 +230,8 @@ export default function Sidebar({ selectedCategory = 'all', onSelectCategory = (
               selectedCategory={selectedCategory}
               onSelectCategory={onSelectCategory}
               onAddSubcategory={handleOpenCreate}
+              onRenameCategory={handleRenameCategory}
+              onDeleteCategory={handleDeleteCategory}
             />
           ))}
         </ul>
