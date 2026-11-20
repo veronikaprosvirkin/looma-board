@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { postsService } from '../services/postsService';
 import PostCard from '../components/board/PostCard';
 import './BoardPage.scss';
+import Modal from '../components/ui/Modal';
+
 
 export default function BoardPage({ selectedCategory = 'all' }) {
 
@@ -14,6 +16,7 @@ export default function BoardPage({ selectedCategory = 'all' }) {
   const [sortOrder, setSortOrder] = useState('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState('feed'); // 'feed' | 'calendar'
+  const [postToDelete, setPostToDelete] = useState(null);
 
   useEffect(() => {
     async function loadPosts() {
@@ -35,7 +38,6 @@ export default function BoardPage({ selectedCategory = 'all' }) {
     setCurrentPage(1);
   }, [selectedCategory, statusFilter, searchQuery]);
 
-  // 4. Конвеєр фільтрації та сортування (useMemo)
   const filteredPosts = useMemo(() => {
     let result = [...posts];
 
@@ -61,6 +63,17 @@ export default function BoardPage({ selectedCategory = 'all' }) {
 
     return result;
   }, [posts, selectedCategory, statusFilter, searchQuery, sortOrder]);
+
+  const handleConfirmDelete = async () => {
+  if (!postToDelete) return;
+  try {
+    const updated = await postsService.deletePost(postToDelete.id);
+    setPosts(updated);
+    setPostToDelete(null);
+  } catch (err) {
+    setError(err.message || 'Не вдалося видалити запис');
+  }
+};
 
   const totalPages = Math.ceil(filteredPosts.length / 10);
   const paginatedPosts = filteredPosts.slice((currentPage - 1) * 10, currentPage * 10);
@@ -127,7 +140,9 @@ export default function BoardPage({ selectedCategory = 'all' }) {
             {paginatedPosts.map((post) => (
               <PostCard
                 key={post.id}
-                post={post}/>
+                post={post}
+                onDelete={(post) => setPostToDelete(post)}
+              />
             ))}
           </div>
 
@@ -160,6 +175,28 @@ export default function BoardPage({ selectedCategory = 'all' }) {
           Тут буде календар (знайдено {filteredPosts.length} записів)
         </div>
       )}
+
+      <Modal
+        isOpen={Boolean(postToDelete)}
+        title = "Видалити запис ? "
+        onClose={() => setPostToDelete(null)}>
+        <div className="modal-card__actions">
+          <button
+            type="button"
+            className="modal-card__actions button"
+            onClick={() => setPostToDelete(null)}
+          >
+            Скасувати
+          </button>
+          <button
+            type="button"
+            className="is-danger"
+            onClick={handleConfirmDelete}
+          >
+            Видалити
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
