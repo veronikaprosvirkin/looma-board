@@ -1,0 +1,117 @@
+.board-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+
+  &__error {
+    padding: 12px 16px;
+    border-radius: 10px;
+    background-color: rgba(242, 139, 130, 0.14);
+    border: 1px solid rgba(242, 139, 130, 0.4);
+    color: #f28b82;
+    font-size: 14px;
+  }
+}
+
+.board-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  &__left,
+  &__right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  input[type='search'] {
+    min-width: 240px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 13.5px;
+    outline: none;
+
+    &:focus {
+      border-color: var(--accent-memory);
+    }
+  }
+
+  button,
+  select {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: var(--text-primary);
+      border-color: var(--text-secondary);
+    }
+
+    &.active {
+      background-color: var(--text-primary);
+      color: var(--bg-page);
+      border-color: var(--text-primary);
+      font-weight: 600;
+    }
+  }
+}
+
+.board-feed-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+   gap: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+
+  span {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+  }
+
+  button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 13px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: var(--accent-memory);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.board-calendar-placeholder {
+  padding: 40px;
+  text-align: center;
+  border-radius: 14px;
+  border: 1px dashed var(--border-color);
+  color: var(--text-secondary);
+}

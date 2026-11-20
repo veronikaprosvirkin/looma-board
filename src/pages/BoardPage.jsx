@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { postsService } from '../services/postsService';
-//import './BoardPage.scss';
+import PostCard from '../components/board/PostCard';
+import './BoardPage.scss';
 
 export default function BoardPage({ selectedCategory = 'all' }) {
 
@@ -124,9 +125,9 @@ export default function BoardPage({ selectedCategory = 'all' }) {
         <>
           <div className="board-feed-grid">
             {paginatedPosts.map((post) => (
-              <div key={post.id}>
-                <strong>{post.title}</strong> — {post.date} ({post.status})
-              </div>
+              <PostCard
+                key={post.id}
+                post={post}/>
             ))}
           </div>
 
