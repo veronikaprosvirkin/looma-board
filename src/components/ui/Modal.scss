@@ -19,6 +19,8 @@
   padding: 20px 24px;
   box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5);
   color: var(--text-primary);
+  max-height: 90vh;
+  overflow-y: auto;
 
   &__header {
     display: flex;

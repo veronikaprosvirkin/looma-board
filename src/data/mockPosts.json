@@ -7,7 +7,8 @@
     "status": "memory",
     "categoryPath": ["travel", "2026", "mountains"],
     "tags": ["гори", "осінь", "подорож"],
-    "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800"
+    "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800",
+    "location": "Карпати, Україна"
   },
   {
     "id": "post-02",
@@ -18,7 +19,8 @@
     "reminderTime": "24h",
     "categoryPath": ["study", "web-dev"],
     "tags": ["навчання", "react", "дедлайн"],
-    "imageUrl": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800"
+    "imageUrl": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800",
+    "location": "вулиця Григорія Сковороди, Київ, Україна"
   },
   {
     "id": "post-03",
@@ -112,7 +114,8 @@
     "reminderTime": "24h",
     "categoryPath": ["travel", "2027"],
     "tags": ["відпочинок", "друзі", "зима"],
-    "imageUrl": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800"
+    "imageUrl": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800",
+    "location": "Ліс, Україна"
   },
   {
     "id": "post-12",
@@ -122,6 +125,7 @@
     "status": "memory",
     "categoryPath": ["personal", "city"],
     "tags": ["зима", "сніг", "київ"],
-    "imageUrl": "https://images.unsplash.com/photo-1483664852095-d6cc6870702d?w=800"
+    "imageUrl": "https://images.unsplash.com/photo-1483664852095-d6cc6870702d?w=800",
+    "location": "Київ, Україна"
   }
 ]

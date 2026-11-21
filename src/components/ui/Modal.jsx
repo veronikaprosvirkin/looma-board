@@ -2,6 +2,16 @@ import { useEffect } from 'react';
 import './Modal.scss';
 
 export default function Modal({ isOpen, title, onClose, children }) {
+  
+  useEffect(() => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  }
+  return () => {
+    document.body.style.overflow = '';
+  };
+}, [isOpen]);
+
   useEffect(() => {
     if (!isOpen) return;
     const handleEsc = (e) => {
