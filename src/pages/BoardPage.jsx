@@ -3,6 +3,7 @@ import { postsService } from '../services/postsService';
 import PostCard from '../components/board/PostCard';
 import './BoardPage.scss';
 import Modal from '../components/ui/Modal';
+import PostPreviewModal from '../components/board/PostPreviewModal';
 
 
 export default function BoardPage({ selectedCategory = 'all' }) {
@@ -17,6 +18,7 @@ export default function BoardPage({ selectedCategory = 'all' }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState('feed'); // 'feed' | 'calendar'
   const [postToDelete, setPostToDelete] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     async function loadPosts() {
@@ -70,6 +72,7 @@ export default function BoardPage({ selectedCategory = 'all' }) {
     const updated = await postsService.deletePost(postToDelete.id);
     setPosts(updated);
     setPostToDelete(null);
+    setSelectedPost(null);
   } catch (err) {
     setError(err.message || 'Не вдалося видалити запис');
   }
@@ -141,6 +144,7 @@ export default function BoardPage({ selectedCategory = 'all' }) {
               <PostCard
                 key={post.id}
                 post={post}
+                onSelect={(post) => setSelectedPost(post)}
                 onDelete={(post) => setPostToDelete(post)}
               />
             ))}
@@ -197,6 +201,11 @@ export default function BoardPage({ selectedCategory = 'all' }) {
           </button>
         </div>
       </Modal>
+      <PostPreviewModal
+        post={selectedPost}
+        onClose={() => setSelectedPost(null)}
+        onDelete={(post) => setPostToDelete(post)}
+      />
     </div>
   );
 }
